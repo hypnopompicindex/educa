@@ -9,6 +9,7 @@ from django.db.models import Count
 from django.apps import apps
 from braces.views import LoginRequiredMixin, PermissionRequiredMixin, \
                          CsrfExemptMixin, JsonRequestResponseMixin
+from students.forms import CourseEnrollForm
 from .forms import ModuleFormSet
 from .models import Subject, Course, Module, Content
 
@@ -196,3 +197,8 @@ class CourseListView(TemplateResponseMixin, View):
 class CourseDetailView(DetailView):
     model = Course
     template_name = 'courses/course/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CourseDetailView, self).get_context_data(**kwargs)
+        context['enroll_form'] = CourseEnrollForm(initial={'course': self.object})
+        return context
